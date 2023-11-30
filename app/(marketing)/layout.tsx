@@ -1,4 +1,4 @@
-import NavBarPage from "./navebar";
+import NavBarPage from "./navbar";
 
 const MarketingPageLayout = ({children}:{children:React.ReactNode}) => {
     return ( 
