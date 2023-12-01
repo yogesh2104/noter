@@ -5,6 +5,7 @@ import { ChevronsLeft, MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from 'usehooks-ts'
+import UserItem from "./useritem";
 
 
 const Navigation = () => {
@@ -42,17 +43,16 @@ const Navigation = () => {
     }
 
     const handleMouseMove=(e:MouseEvent)=>{
-        if(!isResizingRef.current) return
-
-        let newWidth=e.clientX;
-
-        if(newWidth < 240 ) newWidth = 240;
-        if(newWidth > 480 ) newWidth = 480;
-
-        if(sidebarRef.current && navbarRef.current) {
-            sidebarRef.current.style.width = `${newWidth}px`;
-            navbarRef.current.style.setProperty("left",`${newWidth}px`);
-            navbarRef.current.style.setProperty("width",`calc(100%-${newWidth}px)`)
+        if (!isResizingRef.current) return;
+        let newWidth = e.clientX;
+    
+        if (newWidth < 240) newWidth = 240;
+        if (newWidth > 480) newWidth = 480;
+    
+        if (sidebarRef.current && navbarRef.current) {
+          sidebarRef.current.style.width = `${newWidth}px`;
+          navbarRef.current.style.setProperty("left", `${newWidth}px`);
+          navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
         }
     }
 
@@ -68,7 +68,7 @@ const Navigation = () => {
             setIsReseting(true);
 
             sidebarRef.current.style.width =isMobile ? "100%":'240px'
-            navbarRef.current.style.setProperty('width',isMobile? "0":"calc(100%-240px");
+            navbarRef.current.style.setProperty('width',isMobile? "0":"calc(100%-240px)");
             navbarRef.current.style.setProperty('left',isMobile?"100%":"240px")
 
             setTimeout(()=>setIsReseting(false),300)
@@ -109,7 +109,7 @@ const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-         actrion item
+          <UserItem/>
         </div>
         <div className="mt-4">
          doucmen
