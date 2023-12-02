@@ -7,10 +7,11 @@ import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from 'usehooks-ts'
 import UserItem from "./useritem";
 
-import { useQuery,useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Item from "./nav-tem";
 import { toast } from "sonner";
+import DocumentList from "./document-list";
 
 
 const Navigation = () => {
@@ -22,7 +23,9 @@ const Navigation = () => {
     const [isResetting,setIsReseting]=useState(false);
     const [isCollapsed,setIsCollapsed]=useState(isMobile);
 
-    const documents=useQuery(api.documents.get);
+    // const documents=useQuery(api.documents.getSideBar); //this is only get the title of newely created documents
+
+
     const create=useMutation(api.documents.create);
 
 
@@ -133,9 +136,10 @@ const Navigation = () => {
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle}/>
         </div>
         <div className="mt-4">
-         {documents?.map((document) =>(
+          <DocumentList/>
+         {/* {documents?.map((document) =>(
           <p key={document._id}>{document.title}</p>
-         ))}
+         ))} */}
         </div>
         <div
           onMouseDown={handleMouseDown}
