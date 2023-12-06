@@ -9,7 +9,7 @@ const Heroes = () => {
                         src="/hero.svg"
                         alt="hero"
                         className="object-contain"
-                        layout="fill"
+                        fill
                     />
                 </div>
                 <div className="relative h-[400px] w-[600px] hidden md:block">
@@ -17,7 +17,7 @@ const Heroes = () => {
                     src="/reading.svg"
                     alt="hero"
                     className="object-contain"
-                    layout="fill"
+                    fill
                     objectFit="cover"
                     />
                 </div>
