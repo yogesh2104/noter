@@ -2,124 +2,119 @@
 
 import { cn } from "@/lib/utils";
 import { ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from 'usehooks-ts'
-import UserItem from "./useritem";
+import {UserItem} from "./useritem";
 
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import Item from "./nav-tem";
+import {Item} from "./nav-tem";
 import { toast } from "sonner";
-import DocumentList from "./document-list";
-import TrashBox from "./trash-box";
+import {DocumentList} from "./document-list";
+import {TrashBox} from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-setting";
 // Popover component
 import { Popover,PopoverTrigger,PopoverContent } from "@/components/ui/popover";
-import Navbar from "./navbar";
+import {Navbar} from "./navbar";
 
 
-const Navigation = () => {
-    const settings=useSettings()
-    const search=useSearch()
-    const params=useParams()
-    const pathname=usePathname()
-    const isMobile=useMediaQuery("(max-width:768px)");
-    const isResizingRef=useRef(false);
-    const sidebarRef = useRef<ElementRef<"aside">>(null);
-    const navbarRef=useRef<ElementRef<"div">>(null);
-    const [isResetting,setIsReseting]=useState(false);
-    const [isCollapsed,setIsCollapsed]=useState(isMobile);
+export const Navigation = () => {
+  const router = useRouter();
+  const settings = useSettings();
+  const search = useSearch();
+  const params = useParams();
+  const pathname = usePathname();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const create = useMutation(api.documents.create);
 
-    // const documents=useQuery(api.documents.getSideBar); //this is only get the title of newely created documents
+  const isResizingRef = useRef(false);
+  const sidebarRef = useRef<ElementRef<"aside">>(null);
+  const navbarRef = useRef<ElementRef<"div">>(null);
+  const [isResetting, setIsResetting] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-
-    const create=useMutation(api.documents.create);
-
-
-    useEffect(()=>{
-        if(isMobile){
-            collapes()
-        }else{
-            resetWidth()
-        }
-    },[isMobile])
-
-    useEffect(()=>{
-        if(isMobile){
-            collapes()
-        }
-    },[isMobile,pathname])
-
-    const handleMouseDown=(event:React.MouseEvent<HTMLDivElement,MouseEvent>)=>{
-       event.preventDefault();
-       event.stopPropagation();
-       
-       isResizingRef.current=true
-    
-       document.addEventListener("mousemove",handleMouseMove)
-       document.addEventListener("mouseup", handleMouseUp);
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    } else {
+      resetWidth();
     }
+  }, [isMobile]);
 
-    const handleMouseMove=(e:MouseEvent)=>{
-        if (!isResizingRef.current) return;
-        let newWidth = e.clientX;
-    
-        if (newWidth < 240) newWidth = 240;
-        if (newWidth > 480) newWidth = 480;
-    
-        if (sidebarRef.current && navbarRef.current) {
-          sidebarRef.current.style.width = `${newWidth}px`;
-          navbarRef.current.style.setProperty("left", `${newWidth}px`);
-          navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
-        }
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
     }
+  }, [pathname, isMobile]);
 
-    const handleMouseUp=(e:MouseEvent)=>{
-        isResizingRef.current=false;
-        document.removeEventListener("mousemove", handleMouseMove)
-        document.removeEventListener("mouseup", handleMouseUp)
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    isResizingRef.current = true;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!isResizingRef.current) return;
+    let newWidth = event.clientX;
+
+    if (newWidth < 240) newWidth = 240;
+    if (newWidth > 480) newWidth = 480;
+
+    if (sidebarRef.current && navbarRef.current) {
+      sidebarRef.current.style.width = `${newWidth}px`;
+      navbarRef.current.style.setProperty("left", `${newWidth}px`);
+      navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
     }
+  };
 
-    const resetWidth=()=>{
-        if(sidebarRef.current && navbarRef.current){
-            setIsCollapsed(false);
-            setIsReseting(true);
+  const handleMouseUp = () => {
+    isResizingRef.current = false;
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
 
-            sidebarRef.current.style.width =isMobile ? "100%":'240px'
-            navbarRef.current.style.setProperty('width',isMobile? "0":"calc(100%-240px)");
-            navbarRef.current.style.setProperty('left',isMobile?"100%":"240px")
+  const resetWidth = () => {
+    if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(false);
+      setIsResetting(true);
 
-            setTimeout(()=>setIsReseting(false),300)
-        }
+      sidebarRef.current.style.width = isMobile ? "100%" : "240px";
+      navbarRef.current.style.setProperty("width",isMobile ? "0" : "calc(100% - 240px)");
+      navbarRef.current.style.setProperty("left",isMobile ? "100%" : "240px");
+      setTimeout(() => setIsResetting(false), 300);
     }
+  };
 
-    const collapes=()=>{
-        if(sidebarRef.current && navbarRef.current){
-            setIsCollapsed(true)
-            setIsReseting(true)
+  const collapse = () => {
+    if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(true);
+      setIsResetting(true);
 
-            sidebarRef.current.style.width='0';
-            navbarRef.current.style.setProperty('width',"100%");
-            navbarRef.current.style.setProperty('left',"0");
-
-            setTimeout(()=>setIsReseting(false),   300)
-        }
+      sidebarRef.current.style.width = "0";
+      navbarRef.current.style.setProperty("width", "100%");
+      navbarRef.current.style.setProperty("left", "0");
+      setTimeout(() => setIsResetting(false), 300);
     }
+  }
 
-    const handleCreate=()=>{
-      const promise=create({title: 'Untitled Document'});
+  const handleCreate = () => {
+    const promise = create({ title: "Untitled" })
+      .then((documentId) => router.push(`/documents/${documentId}`))
 
-      toast.promise(promise,{
-        loading : "Creating new document...",
-        success : "New Note created",
-        error : "Error Creating New Document"
-      })
-    }
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note."
+    });
+  };
 
-    return ( 
-        <>
+  return (
+    <>
       <aside
         ref={sidebarRef}
         className={cn(
@@ -129,7 +124,7 @@ const Navigation = () => {
         )}
       >
         <div
-          onClick={collapes}
+          onClick={collapse}
           role="button"
           className={cn(
             "h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition",
@@ -139,28 +134,26 @@ const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-          <UserItem/>
+          <UserItem />
           <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
           <Item label="Setting" icon={Settings} onClick={settings.onOpen}/>
-          <Item onClick={handleCreate} label="New Page" icon={PlusCircle}/>
+          <Item
+            onClick={handleCreate}
+            label="New page"
+            icon={PlusCircle}
+          />
         </div>
         <div className="mt-4">
           <DocumentList/>
           <Item onClick={handleCreate} icon={Plus} label="Add a Page"/>
           <Popover>
             <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash}/>
+              <Item label="Trash" icon={Trash} />
             </PopoverTrigger>
-            <PopoverContent 
-            className="p-0 w-72"
-            side={isMobile? "buttom":"right"} >
-              <TrashBox/>
-
+            <PopoverContent className="p-0 w-72" side={isMobile ? "bottom" : "right"}>
+              <TrashBox />
             </PopoverContent>
           </Popover>
-         {/* {documents?.map((document) =>(
-          <p key={document._id}>{document.title}</p>
-         ))} */}
         </div>
         <div
           onMouseDown={handleMouseDown}
@@ -177,16 +170,13 @@ const Navigation = () => {
         )}
       >
         {!!params.documentId ? (
-
         <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth}/>
-        ):(
+        ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
-          {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
-        </nav> ) }
+            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
+          </nav>
+        )}
       </div>
-
     </>
-  );
+  )
 }
- 
-export default Navigation;

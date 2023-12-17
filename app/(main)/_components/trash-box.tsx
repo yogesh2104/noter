@@ -11,7 +11,7 @@ import { useParams,useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const TrashBox = () => {
+export const TrashBox = () => {
     const router=useRouter()
     const params=useParams()
     const doucments=useQuery(api.documents.GetArchive)
@@ -103,6 +103,4 @@ const TrashBox = () => {
             </div>
         </div>
      );
-}
- 
-export default TrashBox;
+};

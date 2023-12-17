@@ -9,7 +9,7 @@ import { FileIcon } from "lucide-react";
 import { useParams,useRouter } from "next/navigation";
 import { useState } from "react";
 
-import Item from "./nav-tem";
+import {Item} from "./nav-tem";
 import { cn } from "@/lib/utils";
 
 interface DocumentListProps {
@@ -19,7 +19,7 @@ interface DocumentListProps {
 }
 
 
-const DocumentList = ({parentDocumentId,level=0}:DocumentListProps) => {
+export const DocumentList = ({parentDocumentId,level=0}:DocumentListProps) => {
     const params= useParams()
     const router=useRouter()
     const [expanded,setExpanded] = useState<Record<string,boolean>>({})
@@ -86,5 +86,3 @@ const DocumentList = ({parentDocumentId,level=0}:DocumentListProps) => {
         </>
      );
 }
- 
-export default DocumentList;

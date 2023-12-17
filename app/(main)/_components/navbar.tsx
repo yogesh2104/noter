@@ -15,7 +15,7 @@ interface NavbarProps {
     onResetWidth:()=>void
 }
 
-const Navbar = ({isCollapsed,onResetWidth}:NavbarProps) => {
+export const Navbar = ({isCollapsed,onResetWidth}:NavbarProps) => {
     const params=useParams()
     const document=useQuery(api.documents.getById,{
         documentId:params.documentId as Id<"documents">
@@ -60,5 +60,3 @@ const Navbar = ({isCollapsed,onResetWidth}:NavbarProps) => {
     </>
 );
 }
- 
-export default Navbar;

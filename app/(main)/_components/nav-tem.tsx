@@ -30,7 +30,7 @@ interface ItemProps {
     icon:LucideIcon;
 }
 
-const Item = ({
+export const Item = ({
     id,
     label,
     onClick,
@@ -141,8 +141,7 @@ const Item = ({
         </div>
      );
 }
- 
-export default Item;
+
 
 Item.Skeleton = function ItemSkeleton({level}:{level?:number}){
     return(
