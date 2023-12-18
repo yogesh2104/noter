@@ -5,6 +5,11 @@ import Image from "next/image"
 import { Button } from "./ui/button"
 import { ImageIcon, X } from "lucide-react"
 import { useCoverImage } from "@/hooks/use-cover-image"
+import { useMutation } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { useParams } from "next/navigation"
+import { Id } from "@/convex/_generated/dataModel"
+import { useEdgeStore } from "@/lib/edgestore"
 
 interface CoverProps{
     url?:string,
@@ -12,8 +17,21 @@ interface CoverProps{
 }
 
 export const Cover=({url,preview}:CoverProps)=>{
+    const {edgestore} = useEdgeStore()
+    const params = useParams()
     const coverImage=useCoverImage()
+    const removeImage=useMutation(api.documents.removeCoverImage)
 
+    const handleRemoveCoverImage=async()=>{
+        if(url){
+            await edgestore.publicFiles.delete({
+                url:url
+            })
+        }
+        removeImage({
+            id:params.documentId as Id<"documents">
+        })
+    }
 
     return(
         <div className={cn("relative w-full h-[35vh] group", !url && "h-[12vh]", url && "bg-muted")}>
@@ -29,7 +47,7 @@ export const Cover=({url,preview}:CoverProps)=>{
                 <div className="opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2">
                     <Button 
                     variant='outline' 
-                    onClick={coverImage.onOpen}
+                    onClick={()=>coverImage.onReplace(url)}
                     className="text-muted-foreground text-xs"
                     size='sm'
                     >
@@ -39,7 +57,7 @@ export const Cover=({url,preview}:CoverProps)=>{
 
                     <Button 
                     variant='outline' 
-                    onClick={()=>{}}
+                    onClick={handleRemoveCoverImage}
                     className="text-muted-foreground text-xs"
                     size='sm'
                     >
