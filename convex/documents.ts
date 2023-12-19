@@ -245,34 +245,63 @@ export const getSearch=query({
     }
 })
 
-export const getById=query({
-    args:{documentId:v.id("documents")},
-    handler:async(ctx, args)=>{
-        const identity= await ctx.auth.getUserIdentity();
+// export const getById=query({
+//     args:{documentId:v.id("documents")},
+//     handler:async(ctx, args)=>{
+//         const identity= await ctx.auth.getUserIdentity();
 
-        const document=await ctx.db.get(args.documentId)
+//         const document=await ctx.db.get(args.documentId)
 
-        if(!document){
-            throw new Error("Note Not Found: " + args.documentId)
-        }
+//         if(!document){
+//             throw new Error("Note Not Found: " + args.documentId)
+//         }
 
-        if(document.isPublished && document.isArchived){
-            return document
-        }
+//         if(document.isPublished && document.isArchived){
+//             return document
+//         }
 
-        if(!identity){
-            throw new Error("Not Authorized")
-        }
+//         if(!identity){
+//             throw new Error("Not Authorized")
+//         }
 
-        const userId=identity.subject
+//         const userId=identity.subject
 
-        if(document.userId !== userId){
-            throw new Error("Unauthorized")
-        }
+//         if(document.userId !== userId){
+//             throw new Error("Unauthorized")
+//         }
 
+//         return document;
+//     }
+// })
+
+export const getById = query({
+    args: { documentId: v.id("documents") },
+    handler: async (ctx, args) => {
+      const identity = await ctx.auth.getUserIdentity();
+  
+      const document = await ctx.db.get(args.documentId);
+  
+      if (!document) {
+        throw new Error("Not found");
+      }
+  
+      if (document.isPublished && !document.isArchived) {
         return document;
+      }
+  
+      if (!identity) {
+        throw new Error("Not authenticated");
+      }
+  
+      const userId = identity.subject;
+  
+      if (document.userId !== userId) {
+        throw new Error("Unauthorized");
+      }
+  
+      return document;
     }
-})
+  });
 
 export const update=mutation({
     args:{

@@ -36,7 +36,7 @@ export const Menu=({documentId}:MenuProps)=>{
             error:"Faild to archive note..."
         })
 
-        router.push("/documents")
+        router.push("/documents/")
     }
 
     return(
@@ -47,7 +47,7 @@ export const Menu=({documentId}:MenuProps)=>{
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-60" align="end" alignOffset={8} forceMount>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={onArchive}>
                     <Trash className="h-4 w-4 mr-2"/>
                     Delete
                 </DropdownMenuItem>

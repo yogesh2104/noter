@@ -27,7 +27,7 @@ export const Banner=({documentId}:BannerProps)=>{
             error:"Error deleting notes"
         })
 
-        router.push("/documents")
+        router.push(`/documents/`)
     }
 
     const onRestore = () =>{
