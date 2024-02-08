@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react";
+import { ChevronsLeft, Figma, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from 'usehooks-ts'
@@ -113,6 +113,10 @@ export const Navigation = () => {
     });
   };
 
+  const handleFigma=()=>{
+    router.push('/figma')
+  }
+
   return (
     <>
       <aside
@@ -137,6 +141,7 @@ export const Navigation = () => {
           <UserItem />
           <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
           <Item label="Setting" icon={Settings} onClick={settings.onOpen}/>
+          <Item label="Design" icon={Figma} onClick={handleFigma} />
           <Item
             onClick={handleCreate}
             label="New page"
