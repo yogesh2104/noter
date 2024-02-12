@@ -16,6 +16,10 @@ const Cursor=({color,x,y,message}:Props)=>{
   >
         <MousePointer2 color={color}/>
 
+        {/* message */}
+
+        {/* {message && } */}
+
         </div>
     )
 }
