@@ -6,7 +6,7 @@ import { LiveCursorProps } from "@/constants/types";
 
 const LiveCursor = ({ others }: LiveCursorProps) => {
     return others.map(({ connectionId, presence }) => {
-        console.log("presence.cursor.x",presence)
+      console.log("presence.cursor.x",presence)
       if (!presence?.cursor) {
         return null;
       }

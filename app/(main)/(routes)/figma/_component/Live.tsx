@@ -63,9 +63,22 @@ const Live=()=>{
 
     useEffect(() => {
         const onKeyUp = (e: KeyboardEvent) => {
+          if(e.key==='/'){
+            setCursorState({
+              mode:CursorMode.Chat,
+              previousMessage:null,
+              message:""
+            })
+          }else if(e.key==='Escape'){
+            updateMyPresence({message:""})
+            setCursorState({mode:CursorMode.Hidden})
+          }
         };
     
         const onKeyDown = (e: KeyboardEvent) => {
+          if(e.key==='/'){
+            e.preventDefault()
+          }
         };
     
         window.addEventListener("keyup", onKeyUp);
@@ -84,7 +97,7 @@ const Live=()=>{
         onPointerMove={handlePointerMove}
         className="h-[100vh] w-full flex justify-center items-center text-center"
         >
-            {cursor && (
+        {cursor && (
           <CursorChat
             cursor={cursor}
             cursorState={cursorState}
@@ -94,7 +107,7 @@ const Live=()=>{
         )}
 
 
-            <LiveCursor others={others}/>
+        <LiveCursor others={others}/>
         </div>
     )
 }
